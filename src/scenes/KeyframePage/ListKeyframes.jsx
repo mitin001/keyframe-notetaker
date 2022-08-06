@@ -5,10 +5,9 @@ import {
 } from 'react-icons/all';
 
 const sort = (a, b) => {
-  const { basename: aBasename } = a || {};
-  const { basename: bBasename } = b || {};
-  const [aNum, bNum] = [parseInt(aBasename, 10), parseInt(bBasename, 10)];
-  return aNum - bNum;
+  const { frame: aFrame } = a || {};
+  const { frame: bFrame } = b || {};
+  return aFrame - bFrame;
 };
 
 export default function ListKeyframes(props) {
@@ -25,7 +24,7 @@ export default function ListKeyframes(props) {
       setKeyframeList(
         files.map(
           ({ basename, fullname }) => ({ frame: parseInt(basename, 10), basename, fullname }),
-        ),
+        ).sort(sort),
       );
     });
     return () => window.ipc.removeAllListeners('keyframesListed');
@@ -34,7 +33,7 @@ export default function ListKeyframes(props) {
   return (
     <Grid container>
       {
-        keyframeList.sort(sort).map(({ frame, basename, fullname }) => (
+        keyframeList.map(({ frame, basename, fullname }) => (
           <Grid item xs style={{ background: inFrame <= frame && frame <= outFrame ? 'antiquewhite' : 'initial' }}>
             <Grid item>
               <img
