@@ -255,6 +255,22 @@ ipcMain.on('openVideo', async () => {
   log.log(stderr);
 });
 
+ipcMain.on('revealInFinder', async (event, { fullname }) => {
+  const path = JSON.stringify(fullname);
+  await execCmd(`open -R ${path}`);
+});
+
+ipcMain.on('copy', async (event, { fullname, text }) => {
+  if (text) {
+    const quotedText = JSON.stringify(text);
+    await execCmd(`echo ${quotedText} | pbcopy`);
+    return;
+  }
+  const file = JSON.stringify(fullname);
+  const cmd = JSON.stringify(`set the clipboard to (read (POSIX file ${file}) as JPEG picture)`);
+  await execCmd(`osascript -e ${cmd}`);
+});
+
 ipcMain.on('listKeyframes', (event, { directory }) => {
   listFiles(directory, '.jpeg').then((files) => {
     sendToMainWindow('keyframesListed', { files });

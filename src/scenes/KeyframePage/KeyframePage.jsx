@@ -25,6 +25,8 @@ export default function KeyframePage() {
   const [open, setOpen] = useState(false);
   const [databaseList, setDatabaseList] = useState([]);
   const [selectedDatabase, selectDatabase] = useState({});
+  const [inFrame, setInFrame] = useState(null);
+  const [outFrame, setOutFrame] = useState(null);
   const { fullname: selectedDbFullname, basename: selectedDbName } = selectedDatabase || {};
 
   useEffect(() => {
@@ -127,7 +129,16 @@ export default function KeyframePage() {
         <DrawerHeader />
         {
           selectedDbFullname
-            ? <ListKeyframes directory={selectedDbFullname} timestamp={new Date().valueOf()} />
+            ? (
+              <ListKeyframes
+                inFrame={inFrame}
+                outFrame={outFrame}
+                setInFrame={setInFrame}
+                setOutFrame={setOutFrame}
+                directory={selectedDbFullname}
+                timestamp={new Date().valueOf()}
+              />
+            )
             : (
               <Box>
                 <Button
